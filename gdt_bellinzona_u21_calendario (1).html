@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDT Bellinzona U21-A — Calendario 2026/27</title>
+<style>
+:root{--bg:#f3f6fa;--card:#fff;--text:#172033;--muted:#6b7485;--accent:#c8102e;--accent2:#fdecef;--line:#e1e7ef}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+.wrap{max-width:1050px;margin:auto;padding:24px 16px 40px}
+header{background:linear-gradient(135deg,#8f0b20,#c8102e);color:white;border-radius:20px;padding:26px;margin-bottom:18px;box-shadow:0 8px 24px #5a122222}
+h1{margin:0 0 6px;font-size:28px}.sub{opacity:.9}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+button,input{border:1px solid var(--line);background:white;border-radius:10px;padding:11px 14px;font-size:15px}
+button{cursor:pointer;font-weight:700}button.active{background:var(--accent);color:white;border-color:var(--accent)}
+input{min-width:230px;flex:1}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.stat{background:white;border:1px solid var(--line);padding:12px 16px;border-radius:12px}.stat b{display:block;font-size:20px}
+.game{display:grid;grid-template-columns:150px 1fr 110px;align-items:center;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:10px 0;text-decoration:none;color:inherit;transition:.15s}
+.game.away-game{background:#e7e9ec}.game.home-game{background:#fff}.game:hover{transform:translateY(-1px);box-shadow:0 5px 18px #102a4612;border-color:#b9cbe0}
+.date{font-weight:800}.date small{display:block;color:var(--muted);font-weight:500;margin-top:4px}
+.match{display:flex;align-items:center;gap:16px}.team{font-size:17px;font-weight:800;flex:1}.team.away{text-align:right}.vs{font-weight:900;color:var(--accent)}
+.meta{color:var(--muted);font-size:13px;margin-top:6px}.time{text-align:right;font-size:20px;font-weight:900;color:var(--accent)}
+.badge{display:inline-block;background:var(--accent2);color:var(--accent);padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;margin-top:6px}
+.empty{padding:40px;text-align:center;color:var(--muted);background:white;border-radius:16px}
+@media(max-width:700px){.game{grid-template-columns:1fr;gap:10px}.time{text-align:left}.match{gap:8px}.team{font-size:15px}.date{display:flex;justify-content:space-between}.date small{margin:0}.wrap{padding:12px}h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div style="display:flex;align-items:center;gap:16px">
+<img src="https://game-center.sihf.ch/images/team/105909.png?rmode=Pad&format=webp&quality=100&width=72&height=50"
+     alt="Logo GDT Bellinzona" style="width:72px;height:50px;object-fit:contain;background:white;border-radius:10px;padding:4px">
+<div><h1>GDT Bellinzona U21-A</h1>
+<div class="sub">Calendario Regular Season · stagione 2026/27</div></div>
+</div>
+</header>
+
+<div class="controls">
+<button class="active" data-filter="all">Tutte</button>
+<button data-filter="home">Casa</button>
+<button data-filter="away">Trasferta</button>
+<input id="search" type="search" placeholder="Cerca avversario…">
+</div>
+
+<div class="stats">
+<div class="stat"><b id="count">26</b><span>partite</span></div>
+<div class="stat"><b id="homeCount">13</b><span>in casa</span></div>
+<div class="stat"><b id="awayCount">13</b><span>in trasferta</span></div>
+</div>
+
+<div id="games"></div>
+</div>
+
+<script>
+const games = [
+["06.09.2026","Domenica","16:45","Brandis Juniors","GDT Bellinzona","away","20270009260112"],
+["13.09.2026","Domenica","14:30","EHC Olten Prospect","GDT Bellinzona","away","20270009260116"],
+["20.09.2026","Domenica","16:45","GDT Bellinzona","HC Rivers","home","20270009260119"],
+["26.09.2026","Sabato","17:15","Argovia Stars","GDT Bellinzona","away","20270009260121"],
+["04.10.2026","Domenica","16:45","GDT Bellinzona","EHC Burgdorf","home","20270009260123"],
+["18.10.2026","Domenica","17:15","SC Lyss","GDT Bellinzona","away","20270009260129"],
+["24.10.2026","Sabato","19:45","GDT Bellinzona","Brandis Juniors","home","20270009260133"],
+["31.10.2026","Sabato","19:45","GDT Bellinzona","EHC Olten Prospect","home","20270009260137"],
+["05.11.2026","Giovedì","20:15","GDT Bellinzona","HC Rivers","home","20270009260161"],
+["08.11.2026","Domenica","18:00","HC Rivers","GDT Bellinzona","away","20270009260140"],
+["15.11.2026","Domenica","16:45","GDT Bellinzona","Argovia Stars","home","20270009260142"],
+["22.11.2026","Domenica","15:15","EHC Burgdorf","GDT Bellinzona","away","20270009260144"],
+["05.12.2026","Sabato","19:45","GDT Bellinzona","SC Lyss","home","20270009260150"],
+["13.12.2026","Domenica","17:30","Brandis Juniors","GDT Bellinzona","away","20270009260154"],
+["20.12.2026","Domenica","17:00","EHC Olten Prospect","GDT Bellinzona","away","20270009260158"],
+["03.01.2027","Domenica","12:15","Argovia Stars","GDT Bellinzona","away","20270009260163"],
+["10.01.2027","Domenica","16:45","GDT Bellinzona","EHC Burgdorf","home","20270009260165"],
+["24.01.2027","Domenica","17:15","SC Lyss","GDT Bellinzona","away","20270009260171"],
+["30.01.2027","Sabato","20:00","GDT Bellinzona","Brandis Juniors","home","20270009260175"],
+["03.02.2027","Mercoledì","19:45","HC Rivers","GDT Bellinzona","away","20270009260182"],
+["06.02.2027","Sabato","20:00","GDT Bellinzona","EHC Olten Prospect","home","20270009260179"],
+["14.02.2027","Domenica","16:45","GDT Bellinzona","Argovia Stars","home","20270009260184"],
+["21.02.2027","Domenica","13:00","EHC Burgdorf","GDT Bellinzona","away","20270009260186"],
+["06.03.2027","Sabato","19:45","GDT Bellinzona","SC Lyss","home","20270009260192"]
+];
+
+let filter="all";
+const gamesEl=document.getElementById("games");
+const search=document.getElementById("search");
+
+function render(){
+ const q=search.value.toLowerCase().trim();
+ const filtered=games.filter(g=>{
+   const okFilter=filter==="all"||g[5]===filter;
+   const okSearch=!q||(g[3]+" "+g[4]).toLowerCase().includes(q);
+   return okFilter&&okSearch;
+ });
+ document.getElementById("count").textContent=filtered.length;
+ gamesEl.innerHTML=filtered.map(g=>{
+   const [date,day,time,home,away,side,id]=g;
+   const opponent=side==="home"?away:home;
+   const label=side==="home"?"CASA":"TRASFERTA";
+   return `<a class="game ${side==="away"?"away-game":"home-game"}" href="https://game-center.sihf.ch/de/game-center/game/${id}" target="_blank" rel="noopener">
+     <div class="date">${date}<small>${day}</small></div>
+     <div>
+       <div class="match"><div class="team ${side==="home"?"": "away"}">${home}</div><div class="vs">VS</div><div class="team ${side==="away"?"": "away"}">${away}</div></div>
+       <div class="meta">U21-A · Regular Season · <span class="badge">${label}</span></div>
+     </div>
+     <div class="time">${time}</div>
+   </a>`;
+ }).join("") || '<div class="empty">Nessuna partita trovata.</div>';
+}
+document.querySelectorAll("button[data-filter]").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll("button[data-filter]").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active"); filter=b.dataset.filter; render();
+});
+search.oninput=render; render();
+</script>
+</body>
+</html>
